@@ -1,0 +1,8 @@
+# Keep your existing Tailscale Funnel route and authentication. Point its
+# reverse proxy upstream at the Rust service; Caddy handles WebSocket upgrades.
+
+your-host.example.com {
+	# Keep or add your existing authentication here.
+	reverse_proxy 127.0.0.1:3003
+}
+

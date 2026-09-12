@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+		/>
+		<meta name="theme-color" content="#050506" />
+		<meta name="color-scheme" content="dark" />
+		<title>Pi</title>
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="stylesheet" href="/styles.css" />
+	</head>
+	<body>
+		<div id="app">
+			<header class="topbar">
+				<button id="menu-toggle" class="round-button menu-toggle" type="button" aria-label="打开会话菜单" aria-expanded="false">
+					<span class="plus-mark" aria-hidden="true"></span>
+				</button>
+				<button id="session-title" class="title-pill" type="button" aria-label="打开用户消息时间线">Pi</button>
+			</header>
+
+			<section id="session-menu" class="session-menu" aria-hidden="true">
+				<div class="session-menu-spacer"></div>
+				<div id="session-list" class="session-list" role="list"></div>
+				<button id="new-session" class="new-session" type="button">
+					<span class="small-plus" aria-hidden="true">＋</span>
+					新建 session
+				</button>
+			</section>
+
+			<main id="conversation" class="conversation" aria-live="polite">
+				<div id="empty-state" class="empty-state">
+					<span>Pi</span>
+					<small>正在连接</small>
+				</div>
+				<div id="message-list" class="message-list"></div>
+			</main>
+
+			<section id="timeline" class="timeline" aria-hidden="true">
+				<div class="timeline-heading">
+					<span>用户消息</span>
+					<small>双指上滑退出</small>
+				</div>
+				<div id="timeline-list" class="timeline-list"></div>
+			</section>
+
+			<footer class="composer">
+				<textarea id="prompt" rows="1" aria-label="发送消息" placeholder="给 Pi 发送消息…" enterkeyhint="enter"></textarea>
+				<button id="send" class="send-button" type="button" aria-label="发送消息"><span aria-hidden="true">↑</span></button>
+			</footer>
+
+			<div id="toast" class="toast" role="status" aria-live="polite"></div>
+		</div>
+		<script src="/app.js" defer></script>
+	</body>
+</html>
+

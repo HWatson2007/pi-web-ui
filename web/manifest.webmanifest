@@ -1,0 +1,10 @@
+{
+	"name": "Pi Mobile UI",
+	"short_name": "Pi",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#050506",
+	"theme_color": "#050506",
+	"icons": []
+}
+
