@@ -478,8 +478,15 @@ button {
 	border-radius: 50%;
 	background: #ededee;
 	color: #101012;
-	font-size: 22px;
 	transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.send-button span {
+	width: 20px;
+	height: 20px;
+	background: currentColor;
+	/* 实心上升箭头：三角头 + 直柄，不依赖字体字形 */
+	clip-path: polygon(50% 0%, 100% 50%, 68% 50%, 68% 100%, 32% 100%, 32% 50%, 0% 50%);
 }
 
 .send-button:disabled {
@@ -495,7 +502,7 @@ button {
 	height: 13px;
 	border-radius: 2px;
 	background: currentColor;
-	font-size: 0;
+	clip-path: none;
 }
 
 .toast {
