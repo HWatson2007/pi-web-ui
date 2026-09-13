@@ -92,6 +92,13 @@ button {
 }
 
 .plus-mark::after {
+	/* Anchor explicitly to the parent (both strokes share the same size, so
+	   overlapping them keeps a common center when rotated). Without top/left,
+	   the absolute box falls back to an unreliable static position, which
+	   shoves the vertical stroke to the right end of the horizontal one,
+	   turning the plus into a weird "⊢" glyph. */
+	top: 0;
+	left: 0;
 	transform: rotate(90deg);
 }
 
