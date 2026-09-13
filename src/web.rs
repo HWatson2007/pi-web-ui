@@ -225,17 +225,28 @@ async fn asset(uri: Uri) -> Response {
         return StatusCode::NOT_FOUND.into_response();
     };
     let mime = mime_guess::from_path(path).first_or_octet_stream();
+    // Assets only change when the binary changes, so the package version
+    // doubles as a cache-busting query: index.html references assets as
+    // /styles.css?v=<version>, and browsers may cache such URLs immutably.
+    // A new binary serves new URLs, so clients pick up updated assets on
+    // the next load without any manual cache clearing.
+    let version = env!("CARGO_PKG_VERSION");
+    let versioned = uri.query() == Some(&format!("v={version}"));
+    let cache_control = if versioned {
+        "public, max-age=31536000, immutable"
+    } else {
+        "no-cache"
+    };
+    let body = if path == "index.html" {
+        let html = String::from_utf8_lossy(&asset.data).into_owned();
+        Body::from(versioned_urls(&html, version))
+    } else {
+        Body::from(asset.data.into_owned())
+    };
     Response::builder()
         .status(StatusCode::OK)
         .header(header::CONTENT_TYPE, mime.as_ref())
-        .header(
-            header::CACHE_CONTROL,
-            if path == "index.html" {
-                "no-cache"
-            } else {
-                "public, max-age=3600"
-            },
-        )
+        .header(header::CACHE_CONTROL, cache_control)
         .header(header::X_CONTENT_TYPE_OPTIONS, "nosniff")
         .header("referrer-policy", "no-referrer")
         .header("x-frame-options", "DENY")
@@ -243,6 +254,13 @@ async fn asset(uri: Uri) -> Response {
             "content-security-policy",
             "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
         )
-        .body(Body::from(asset.data.into_owned()))
+        .body(body)
         .unwrap_or_else(|_| StatusCode::INTERNAL_SERVER_ERROR.into_response())
+}
+
+fn versioned_urls(html: &str, version: &str) -> String {
+    ["manifest.webmanifest", "styles.css", "app.js"].iter().fold(
+        html.to_string(),
+        |acc, name| acc.replace(&format!("/{name}\""), &format!("/{name}?v={version}\"")),
+    )
 }
