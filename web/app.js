@@ -476,7 +476,11 @@
 		target.addEventListener(
 			"touchmove",
 			(event) => {
-				if (!gesture || event.touches.length !== 2) return;
+				if (!gesture || event.touches.length < 2) return;
+				// Two fingers are reserved for the timeline gesture: block the
+				// native pan/pinch on the very first move, before the browser's
+				// scroll slop starts an (uncancellable from JS) native scroll.
+				event.preventDefault();
 				const [first, second] = event.touches;
 				gesture.lastX = (first.clientX + second.clientX) / 2;
 				gesture.lastY = (first.clientY + second.clientY) / 2;
@@ -486,7 +490,6 @@
 				const dy = gesture.lastY - gesture.startY;
 				if (Math.abs(dy) > 22 && Math.abs(dy) > Math.abs(dx) * 1.4 && distanceChange < 0.15) {
 					gesture.claimed = true;
-					event.preventDefault();
 				}
 			},
 			{ passive: false },
