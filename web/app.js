@@ -616,7 +616,10 @@
 		if (elements.app.classList.contains("menu-open")) closeMenu();
 		else openMenu();
 	});
-	elements.title.addEventListener("click", openTimeline);
+	elements.title.addEventListener("click", () => {
+		if (elements.app.classList.contains("timeline-open")) closeTimeline();
+		else openTimeline();
+	});
 	elements.newSession.addEventListener("click", () => {
 		closeMenu();
 		send({ type: "create_session" });
